@@ -38,6 +38,7 @@ function Blog() {
             toast.error(Error.message)
 
         }
+        setloading(false)
     }
 
 

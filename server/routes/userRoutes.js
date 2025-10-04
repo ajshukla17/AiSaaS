@@ -5,8 +5,8 @@ import { getPublishedCreations, getUserCreations, toggleLikeCreation } from '../
 
 const userRouter =express.Router();
 
-userRouter.post('/get-user-creation' ,auth,getUserCreations)
-userRouter.post('/get-published-creation' ,auth,getPublishedCreations)
+userRouter.get('/get-user-creation' ,auth,getUserCreations)
+userRouter.get('/get-published-creation' ,auth,getPublishedCreations)
 userRouter.post('/toggle-like-creation' ,auth,toggleLikeCreation)
 
 

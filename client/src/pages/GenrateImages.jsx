@@ -1,6 +1,12 @@
 import React from 'react';
 import { Sparkles ,Hash ,Image } from 'lucide-react';  
 import { useState } from 'react';
+import axios from 'axios'
+import toast from 'react-hot-toast';
+import Markdown from 'react-markdown';
+import { useAuth } from '@clerk/clerk-react';
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL; 
 
 function GenrateImages() {
     const imagestyle = [
@@ -10,9 +16,30 @@ function GenrateImages() {
     const [selectedstyle, setselectedstyle] = useState('Realistics')
     const [input, setInput] = useState('')
     const [publish ,setpublish] = useState('false')
+    const [loading ,setloading] =useState(false)
+    const [content , setcontent] = useState('')
+    
+    const {getToken} =useAuth()
 
     const onsbmitHandler =async (e) =>{
         e.preventDefault();
+
+        try{
+            setloading(true)
+            const prompt = `Generate a blog title for the keyboard  ${input} in the category ${selectedstyle}`
+            const {data} = await axios.post('/api/ai/generate-image', {prompt, publish}, {
+                headers: {Authorization: `Bearer ${await getToken()}`}
+            })
+            if(data.success){
+                setcontent(data.content)
+            }else{
+                toast.error(data.message)
+            }
+        }catch(Error){
+            toast.error(Error.message)
+
+        }
+        setloading(false)
     }
 
 
@@ -50,8 +77,11 @@ function GenrateImages() {
                     <p className='text-sm'>Make this image public</p>
                 </div>
                 <br />
-                <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00AD25] to-[#8E37EB] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-                    <Image  className='w-5'/>
+                <button disabled={loading} className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00AD25] to-[#8E37EB] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
+                    {loading ? <span className='w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin'></span>
+                    :  <Image  className='w-5'/>
+                    }
+                    
                     Generate Image
                 </button>
             </form>
@@ -62,12 +92,22 @@ function GenrateImages() {
                     <Image className='w-5 h-5 text-[#00AD25]'/>
                     <h1 className='text-xl font-semibold'>Generated Image</h1>
                 </div>
-                <div className='flex-1 flex justify-center items-center'>
-                    <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
+                {
+                    !content ?  (
+                        <div className='flex-1 flex justify-center items-center'>
+                         <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
                         <Image className='w-9 h-9' />
                         <p>Enter a topic and click "Generate Image" to get started</p>
                     </div>
-                </div> 
+                </div>
+                    ) : (
+                        <div className='mt-3 h-full'>
+                            <img src={content} alt=""  className='w-full h-full'/>
+                        </div>
+
+                    )
+                }
+                 
             </div>
 
         </div>

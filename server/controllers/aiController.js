@@ -6,6 +6,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import FormData from "form-data";
 import fs from 'fs'
 import { PDFDocument } from "pdf-lib";
+import multer from "multer";
 
 
 
@@ -158,7 +159,7 @@ export const removeImageBackground = async (req, res) => {
     try {
 
         const {userId} =req.auth();
-        const {image } =req.file;    
+        const image  =req.file;    
         const plan = req.plan;
 
 
@@ -198,7 +199,7 @@ export const removeImageObject = async (req, res) => {
 
         const {userId} =req.auth();
         const {object} =req.body;
-        const {image } =req.file;    
+        const image =req.file;    
         const plan = req.plan;
 
 
@@ -240,10 +241,10 @@ export const reviewResume = async (req, res) => {
     try {
 
         const {userId} =req.auth();
-        const {resume } =req.file;    
+        const resume  =req.file;    
         const plan = req.plan;
 
-
+       console.log(req.file);
         if (plan !== 'premium') {
             return res.json({ 
                 success: false, 
