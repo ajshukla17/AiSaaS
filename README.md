@@ -25,7 +25,7 @@ Start the development server:
 
 
 npm run dev
-# or
+
 yarn dev
 Visit http://localhost:your_port_no to launch the app.
 
