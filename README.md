@@ -8,11 +8,12 @@ Clone the repository:
 git clone https://github.com/ajshukla17/AiSaaS.git
 
 cd AiSaaS
+
 Install dependencies:
 
 
 npm install
-# or
+
 yarn install
 Configure environment variables:
 
